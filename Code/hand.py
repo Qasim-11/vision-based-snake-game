@@ -17,20 +17,15 @@ def getHand(frame, model, drawer, connection_type, draw=True, return_details=Tru
 
                 index_tip = handLms.landmark[8]
 
-                # Convert normalized coordinates to pixel coordinates
                 h, w, c = frame.shape
 
-                # make a line from the index finter like you're writing
                 index_tip_coords = (int(index_tip.x * w), int(index_tip.y * h))
                 middle_tip_coords = (int(handLms.landmark[12].x * w), int(handLms.landmark[12].y * h))
-                # get the center between the index and middle finger
+                # center between the index and middle finger
                 center = (int((index_tip_coords[0] + middle_tip_coords[0])) // 2, int((index_tip_coords[1] + middle_tip_coords[1])) // 2)
-
-                            # Other fingers: Compare tip with the middle joint along the y-axis (vertical)
-
                 
                 for i in [8, 12, 16, 20]:  # Index, Middle, Ring, Pinky
-                    if -(handLms.landmark[i].y) > -(handLms.landmark[i - 2].y):  # Tip above PIP joint
+                    if -(handLms.landmark[i].y) > -(handLms.landmark[i - 2].y):  # This basically checks if a finger is up. 
                         fingers_state.append(1)
                     else:
                         fingers_state.append(0)
