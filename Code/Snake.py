@@ -8,17 +8,15 @@ os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow INFO and WARNING
 def __main__():
     print("Starting snake game")
 
-    # Load hand tracking model
     mp_hands = mp.solutions.hands
     hands = mp_hands.Hands(static_image_mode=False, max_num_hands=1, min_detection_confidence=0.8, min_tracking_confidence=0.8)
     mp_draw = mp.solutions.drawing_utils
 
-    # Canvas and snake initialization
     canvas = None
-    frame_width, frame_height = 640, 480  # Default frame size
+    frame_width, frame_height = 640, 480  
     snake_length = 5  # Snake tail length
-    snake_points = [(frame_width // 2, frame_height // 2)] * snake_length  # Start snake in the middle
-    snake_speed = 3  # Max movement per frame
+    snake_points = [(frame_width // 2, frame_height // 2)] * snake_length  # Start snake in the center
+    snake_speed = 3  
 
     apple_x = None
     apple_y = None
@@ -44,27 +42,22 @@ def __main__():
             break
         frame = cv2.flip(frame, 1)
 
-        # Detect hand and get landmarks
+        # Detect hand
         frame, index_tip_coords, finger_state, hand_detected = hand.getHand(frame, hands, mp_draw, mp_hands.HAND_CONNECTIONS, return_details=True)
 
-        # Initialize canvas
         if canvas is None:
             canvas = np.zeros_like(frame)
 
-        # Snake follows the finger
         if hand_detected and index_tip_coords:
-            # Calculate movement difference
             diff_x = index_tip_coords[0] - snake_points[-1][0]
             diff_y = index_tip_coords[1] - snake_points[-1][1]
 
-            # Limit movement by snake speed
             distance = np.sqrt(diff_x**2 + diff_y**2)
             if distance > snake_speed:
                 scale = snake_speed / distance
                 diff_x = int(diff_x * scale)
                 diff_y = int(diff_y * scale)
 
-            # New head position
             head_x = snake_points[-1][0] + diff_x
             head_y = snake_points[-1][1] + diff_y
 
@@ -74,7 +67,6 @@ def __main__():
 
             new_head = (head_x, head_y)
 
-            # Update the snake points
             snake_points.append(new_head)
             if len(snake_points) > snake_length:
                 snake_points.pop(0)
@@ -114,14 +106,14 @@ def __main__():
         if np.sqrt((snake_points[-1][0] - apple_x)**2 + (snake_points[-1][1] - apple_y)**2) < 10:
             snake_length += 5
             snake_speed += 1
-            # Generate a new apple
+
             apple_x = None 
             apple_y = None
             
         # if the snake hits itself, break
         if time.time() - start_time > 20:
             print("Losing time")
-            for point in snake_points[:-2]:  # Exclude the head
+            for point in snake_points[:-2]:  # don't change -2, because -1 is the head
                 # print((snake_points[-1][0] - point[0])**2 + (snake_points[-1][1] - point[1])**2)
                 if (snake_points[-1][0] - point[0])**2 + (snake_points[-1][1] - point[1])**2 <= 8:  # 10^2 = 100
                     print("Game Over: You hit yourself")
