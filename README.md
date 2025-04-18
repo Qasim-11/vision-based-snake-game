@@ -78,7 +78,7 @@ python snake_game.py
 ## 🎥 Demo
 
 Check out a quick preview of the game in action:
-[▶️ Watch the demo](Demo/Snake-Game-Demo.mp4)
+<video src="Demo/Snake-Game-Demo.mp4" width="360" autoplay loop muted></video>
 ---
 
 Have fun! PRs and feature suggestions are welcome.
