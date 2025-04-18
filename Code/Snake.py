@@ -4,7 +4,7 @@ import mediapipe as mp
 import hand
 import time
 import os
-os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow INFO and WARNING messages
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # Suppress TensorFlow INFO and WARNING messages. It actually didn't work :)
 def __main__():
     print("Starting snake game")
 
